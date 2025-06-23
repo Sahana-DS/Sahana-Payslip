@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  employee-side:
+    build:
+      context: ./Employee-Side
+    ports:
+      - "7021:80"
+    depends_on:
+      - backend
+
+  hr-side:
+    build:
+      context: ./HR-Side
+    ports:
+      - "7022:80"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./Backend
+    ports:
+      - "3009:3009"
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: payslip_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14
+    container_name: postgres3
+    ports:
+      - "5019:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: payslip_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+
